@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include "../MXCHIP_Driver/MXCHIPInterface.h"
+#include "../mxchip-wifi-driver/MXCHIPInterface.h"
 
 // Various timeouts for different MXCHIP operations
 #define MXCHIP_CONNECT_TIMEOUT 15000

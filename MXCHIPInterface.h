@@ -17,7 +17,7 @@
 #ifndef MXCHIP_INTERFACE_H
 #define MXCHIP_INTERFACE_H
 
-#include "../MXCHIP_Driver/mxchip/MXCHIP.h"
+#include "../mxchip-wifi-driver/mxchip/MXCHIP.h"
 #include "mbed.h"
 
 #define MXCHIP_SOCKET_COUNT 5

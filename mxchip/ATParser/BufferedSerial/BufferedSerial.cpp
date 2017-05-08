@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "../../../../MXCHIP_Driver/mxchip/ATParser/BufferedSerial/BufferedSerial.h"
+#include "../../../../mxchip-wifi-driver/mxchip/ATParser/BufferedSerial/BufferedSerial.h"
 
 #include <stdarg.h>
 

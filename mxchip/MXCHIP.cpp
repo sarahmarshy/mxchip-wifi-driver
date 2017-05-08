@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "../../MXCHIP_Driver/mxchip/MXCHIP.h"
+#include "../../mxchip-wifi-driver/mxchip/MXCHIP.h"
 
 MXCHIP::MXCHIP(PinName tx, PinName rx, bool debug)
     : _serial(tx, rx, 1024), _parser(_serial)

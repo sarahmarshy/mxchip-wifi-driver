@@ -24,7 +24,7 @@
 #ifndef BUFFEREDSERIAL_H
 #define BUFFEREDSERIAL_H
  
-#include "../../../../MXCHIP_Driver/mxchip/ATParser/BufferedSerial/Buffer/MyBuffer.h"
+#include "../../../../mxchip-wifi-driver/mxchip/ATParser/BufferedSerial/Buffer/MyBuffer.h"
 #include "mbed.h"
 
 /** A serial port (UART) for communication with other serial devices

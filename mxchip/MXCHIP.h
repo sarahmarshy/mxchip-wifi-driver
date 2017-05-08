@@ -17,7 +17,7 @@
 #ifndef MXCHIP_H
 #define MXCHIP_H
 
-#include "../../MXCHIP_Driver/mxchip/ATParser/ATParser.h"
+#include "../../mxchip-wifi-driver/mxchip/ATParser/ATParser.h"
 
 /** MXCHIPInterface class.
     This is an interface to a MXCHIP radio.

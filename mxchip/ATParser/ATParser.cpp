@@ -18,7 +18,7 @@
  *
  */
 
-#include "../../../MXCHIP_Driver/mxchip/ATParser/ATParser.h"
+#include "../../../mxchip-wifi-driver/mxchip/ATParser/ATParser.h"
 
 #include "mbed_debug.h"
 
