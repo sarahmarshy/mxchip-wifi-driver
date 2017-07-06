@@ -17,7 +17,7 @@
 #include "../../mxchip-wifi-driver/mxchip/MXCHIP.h"
 
 MXCHIP::MXCHIP(PinName tx, PinName rx, bool debug)
-    : _serial(tx, rx, 1024), _parser(_serial)
+    : _serial(tx, rx, 1024), _parser(_serial, "\x0d")
     , _packets(0), _packets_end(&_packets)
 {
     _serial.baud(115200);
@@ -159,7 +159,7 @@ const char *MXCHIP::getMACAddress(void)
 }
 
 
-//get current signal strength £»
+//get current signal strength ï¿½ï¿½
 int8_t MXCHIP::getRSSI(){
 	if (!(_parser.send("AT+WLINK")
 			&&_parser.recv("%*[^=]=%*[^,],%[^,],%[^#]#",_rssi_buffer)))
