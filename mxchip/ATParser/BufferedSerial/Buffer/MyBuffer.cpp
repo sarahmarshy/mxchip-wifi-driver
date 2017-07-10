@@ -21,7 +21,7 @@
  * limitations under the License.
  */
  
-#include "../../../../../mxchip-wifi-driver/mxchip/ATParser/BufferedSerial/Buffer/MyBuffer.h"
+#include "MyBuffer.h"
 
 template <class T>
 MyBuffer<T>::MyBuffer(uint32_t size)

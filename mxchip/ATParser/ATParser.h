@@ -17,12 +17,13 @@
  * Parser for the AT command syntax
  *
  */
+#ifndef AT_PARSER_H
+#define AT_PARSER_H
 
 #include "mbed.h"
 #include <cstdarg>
 #include <vector>
-
-#include "../../../mxchip-wifi-driver/mxchip/ATParser/BufferedSerial/BufferedSerial.h"
+#include "BufferedSerial.h"
 #include "Callback.h"
 
 
@@ -73,7 +74,7 @@ public:
     * @param timeout timeout of the connection
     * @param delimiter string of characters to use as line delimiters
     */
-    ATParser(BufferedSerial &serial, const char *delimiter = "#\n", int buffer_size = 256, int timeout = 8000, bool debug = false) :
+    ATParser(BufferedSerial &serial, const char *delimiter = "\r\n", int buffer_size = 256, int timeout = 8000, bool debug = false) :
         _serial(&serial),
         _buffer_size(buffer_size) {
         _buffer = new char[buffer_size];
@@ -189,7 +190,7 @@ public:
     * @param ... arguments to printf
     * @return number of bytes written or -1 on failure
     */
-    //int printf(const char *format, ...);
+    int printf(const char *format, ...);
     int vprintf(const char *format, va_list args);
 
     /**
@@ -230,4 +231,4 @@ public:
     */
     void flush();
 };
-
+#endif

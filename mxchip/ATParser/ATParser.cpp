@@ -18,8 +18,7 @@
  *
  */
 
-#include "../../../mxchip-wifi-driver/mxchip/ATParser/ATParser.h"
-
+#include "ATParser.h"
 #include "mbed_debug.h"
 
 
@@ -172,26 +171,26 @@ bool ATParser::vsend(const char *command, va_list args)
     if (vsprintf(_buffer, command, args) < 0) {
         return false;
     }
-
     for (int i = 0; _buffer[i]; i++) {
         if (putc(_buffer[i]) < 0) {
             return false;
         }
     }
 
-    // Finish with newline//
-    char s[] = "\x0d";
-    for (int i = 0; s[i]; i++){
-        if(putc(s[i]) < 0)
-            printf("send <CR> error\n");
+    // Finish with newline
+    for (int i = 0; _delimiter[i]; i++) {
+        if (putc(_delimiter[i]) < 0) {
+            return false;
+        }
     }
-    
+
     debug_if(dbg_on, "AT> %s\r\n", _buffer);
     return true;
 }
 
 bool ATParser::vrecv(const char *response, va_list args)
 {
+vrecv_start:
     // Iterate through each line in the expected response
     while (response[0]) {
         // Since response is const, we need to copy it into our buffer to
@@ -233,14 +232,13 @@ bool ATParser::vrecv(const char *response, va_list args)
         while (true) {
             // Recieve next character
             int c = getc();
-            //printf("111111111c= %d\n", c);
             if (c < 0) {
                 return false;
             }
-            
+
             if (c == 0x0d)
                 c = '#';
-                
+
             _buffer[offset + j++] = c;
             _buffer[offset + j] = 0;
 
@@ -252,15 +250,16 @@ bool ATParser::vrecv(const char *response, va_list args)
                     _oobs[k].cb();
 
                     // oob may have corrupted non-reentrant buffer,
-                    // so we need to set it up again
-                    return vrecv(response, args);
+                    // so we need to set it up again.
+                    // Use goto to save stack usage rather than a
+                    // recursive approach.
+                    goto vrecv_start;
                 }
             }
 
             // Check for match
             int count = -1;
             sscanf(_buffer+offset, _buffer, &count);
-            //printf("_buffer+offset is %s, _buffer is %s\n", _buffer+offset, _buffer);
 
             // We only succeed if all characters in the response are matched
             if (count == j) {
@@ -281,7 +280,7 @@ bool ATParser::vrecv(const char *response, va_list args)
             // running out of space usually means we ran into binary data
             if (c == '\n' || j+1 >= _buffer_size - offset ||
                 strcmp(&_buffer[offset + j-_delim_size], _delimiter) == 0) {
-                
+
                 debug_if(dbg_on, "AT< %s", _buffer+offset);
                 j = 0;
             }
@@ -292,15 +291,15 @@ bool ATParser::vrecv(const char *response, va_list args)
 }
 
 
-//// Mapping to vararg functions
-//int ATParser::printf(const char *format, ...)
-//{
-//    va_list args;
-//    va_start(args, format);
-//    int res = vprintf(format, args);
-//    va_end(args);
-//    return res;
-//}
+// Mapping to vararg functions
+int ATParser::printf(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int res = vprintf(format, args);
+    va_end(args);
+    return res;
+}
 
 int ATParser::scanf(const char *format, ...)
 {

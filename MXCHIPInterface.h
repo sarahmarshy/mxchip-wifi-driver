@@ -17,7 +17,7 @@
 #ifndef MXCHIP_INTERFACE_H
 #define MXCHIP_INTERFACE_H
 
-#include "../mxchip-wifi-driver/mxchip/MXCHIP.h"
+#include "MXCHIP.h"
 #include "mbed.h"
 
 #define MXCHIP_SOCKET_COUNT 5
@@ -92,6 +92,20 @@ public:
      */
     virtual const char *get_mac_address();
 
+    /** Get the local gateway
+    *
+    *  @return         Null-terminated representation of the local gateway
+    *                  or null if no network mask has been recieved
+    */
+   virtual const char *get_gateway();
+
+   /** Get the local network mask
+    *
+    *  @return         Null-terminated representation of the local network mask
+    *                  or null if no network mask has been recieved
+    */
+   virtual const char *get_netmask();
+
     /** Gets the current radio signal strength for active connection
      *
      * @return          Connection strength in dBm (negative value)
@@ -121,14 +135,14 @@ protected:
     /** Close the socket
      *  @param handle       Socket handle
      *  @return             0 on success, negative on failure
-     *  @note On failure, any memory associated with the socket must still 
+     *  @note On failure, any memory associated with the socket must still
      *        be cleaned up
      */
     virtual int socket_close(void *handle);
 
     /** Bind a server socket to a specific port
      *  @param handle       Socket handle
-     *  @param address      Local address to listen for incoming connections on 
+     *  @param address      Local address to listen for incoming connections on
      *  @return             0 on success, negative on failure.
      */
     virtual int socket_bind(void *handle, const SocketAddress &address);
@@ -217,7 +231,7 @@ protected:
     {
         return this;
     }
-    
+
 private:
     MXCHIP _mxchip;
     bool _ids[MXCHIP_SOCKET_COUNT];

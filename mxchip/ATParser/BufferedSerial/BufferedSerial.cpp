@@ -20,8 +20,7 @@
  * limitations under the License.
  */
 
-#include "../../../../mxchip-wifi-driver/mxchip/ATParser/BufferedSerial/BufferedSerial.h"
-
+#include "BufferedSerial.h"
 #include <stdarg.h>
 
 extern "C" int BufferedPrintfC(void *stream, int size, const char* format, va_list arg);
