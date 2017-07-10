@@ -196,7 +196,6 @@ private:
 
     char _ip_buffer[16];
     char _mac_buffer[18];
-    char _rssi_buffer[16];
 };
 
 #endif

@@ -178,10 +178,11 @@ bool ATParser::vsend(const char *command, va_list args)
     }
 
     // Finish with newline
-    for (int i = 0; _delimiter[i]; i++) {
-        if (putc(_delimiter[i]) < 0) {
-            return false;
-        }
+    // Finish with newline//
+    char s[] = "\x0d";
+    for (int i = 0; s[i]; i++){
+        if(putc(s[i]) < 0)
+            printf("send <CR> error\n");
     }
 
     debug_if(dbg_on, "AT> %s\r\n", _buffer);
@@ -236,8 +237,8 @@ vrecv_start:
                 return false;
             }
 
-            if (c == 0x0d)
-                c = '#';
+            //if (c == 0x0d)
+            //    c = '#';
 
             _buffer[offset + j++] = c;
             _buffer[offset + j] = 0;
@@ -278,7 +279,7 @@ vrecv_start:
 
             // Clear the buffer when we hit a newline or ran out of space
             // running out of space usually means we ran into binary data
-            if (c == '\n' || j+1 >= _buffer_size - offset ||
+            if (j+1 >= _buffer_size - offset ||
                 strcmp(&_buffer[offset + j-_delim_size], _delimiter) == 0) {
 
                 debug_if(dbg_on, "AT< %s", _buffer+offset);
