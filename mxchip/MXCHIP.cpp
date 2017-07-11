@@ -17,7 +17,7 @@
 #include "MXCHIP.h"
 
 MXCHIP::MXCHIP(PinName tx, PinName rx, bool debug)
-    : _serial(tx, rx, 1024), _parser(_serial)
+    : _serial(tx, rx, 1024), _parser(_serial, "\r\n", "\r")
     , _packets(0), _packets_end(&_packets)
 {
     _serial.baud(115200);
