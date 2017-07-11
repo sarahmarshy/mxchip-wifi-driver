@@ -26,7 +26,7 @@
 MXCHIPInterface::MXCHIPInterface(PinName tx, PinName rx, bool debug)
     : _mxchip(tx, rx, debug)
 {
-	_channel=0;
+    _channel=0;
     memset(_ids, 0, sizeof(_ids));
     memset(_cbs, 0, sizeof(_cbs));
 
@@ -35,12 +35,12 @@ MXCHIPInterface::MXCHIPInterface(PinName tx, PinName rx, bool debug)
 
 int MXCHIPInterface::connect(const char *ssid, const char *pass, nsapi_security_t security,uint8_t channel)
 {
-	set_credentials(ssid, pass, security);
+    set_credentials(ssid, pass, security);
     return connect();
 }
 
 int MXCHIPInterface::connect(){
-	_mxchip.setTimeout(MXCHIP_CONNECT_TIMEOUT);
+    _mxchip.setTimeout(MXCHIP_CONNECT_TIMEOUT);
 
     if (!_mxchip.startup()) {
         return NSAPI_ERROR_DEVICE_ERROR;
@@ -52,7 +52,7 @@ int MXCHIPInterface::connect(){
         return NSAPI_ERROR_DHCP_FAILURE;
     }
 
-	  return NSAPI_ERROR_OK;
+    return NSAPI_ERROR_OK;
 }
 
 int MXCHIPInterface::set_credentials(const char *ssid, const char *pass, nsapi_security_t security)
@@ -70,12 +70,12 @@ int MXCHIPInterface::set_credentials(const char *ssid, const char *pass, nsapi_s
 
 int MXCHIPInterface::set_channel(uint8_t channel)
 {
-	return _mxchip.setChannel(channel);
+    return _mxchip.setChannel(channel);
 }
 
 int MXCHIPInterface::disconnect()
 {
-	_mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
+    _mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
 
     if (!_mxchip.disconnect()) {
         return NSAPI_ERROR_DEVICE_ERROR;
@@ -106,7 +106,7 @@ const char* MXCHIPInterface::get_netmask()
 
 
 int8_t MXCHIPInterface::get_rssi(){
-	return _mxchip.getRSSI();
+    return _mxchip.getRSSI();
 }
 
 

@@ -26,56 +26,54 @@ MXCHIP::MXCHIP(PinName tx, PinName rx, bool debug)
 
 bool MXCHIP::startup(void)
 {
-	bool success=false;
-	    //Query FMODE;
-		char buffer[20];
-		char buffer2[20];
-		memset(buffer,0,sizeof(buffer));
+    bool success=false;
+    //Query FMODE;
+    char buffer[20];
+    memset(buffer,0,sizeof(buffer));
 
-		for(int i=0;i<3;i++){
-			_parser.send("AT+REBOOT");
-			_parser.setTimeout(1000);
-			bool ok = _parser.recv("+OK",buffer);
-			_parser.setTimeout(8000);
+    for(int i=0;i<3;i++){
+        _parser.send("AT+REBOOT");
+        _parser.setTimeout(1000);
+        bool ok = _parser.recv("+OK",buffer);
+        _parser.setTimeout(8000);
 
-			if(ok)
-				break;
-			else{
-				if(!(i==2)){
-					//continue to send reboot command.
-					continue;
-				}else{
-						printf("This is the first time to setup,maybe it will takes a lot of time!\r\n");
-						if(_parser.write("+++",3)&& _parser.recv("a")){
-							if(_parser.write("a",1)&&_parser.recv("+OK")){
-								_parser.oob("+EVENT=SOCKET", this, &MXCHIP::_packet_handler);
-								success= _parser.send("AT+FMODE=AT_NONE")&&
-											_parser.recv("+OK")&&
-											_parser.send("AT+FEVENT=ON")&&
-											_parser.recv("+OK")&&
-											_parser.send("AT+FACTORY")&&
-											_parser.recv("+OK");
-								wait(3);
-								_parser.oob("+EVENT=SOCKET", this, &MXCHIP::_packet_handler);
-								return success;
-							}else
-							{
-								printf("test error!\r\n");
-								  return false;
-							}
-						}else{
-							printf("send a can't get +OK\r\n");
-							return false;
-						}
-				}
-			}
-		}
+        if(ok)
+            break;
+        else {
+            if(!(i==2)) {
+            //continue to send reboot command.
+            continue;
+            } else {
+                printf("This is the first time to setup,maybe it will takes a lot of time!\r\n");
+                if(_parser.write("+++",3)&& _parser.recv("a")) {
+                    if(_parser.write("a",1)&&_parser.recv("+OK")){
+                        _parser.oob("+EVENT=SOCKET", this, &MXCHIP::_packet_handler);
+                        success= _parser.send("AT+FMODE=AT_NONE")&& \
+                        _parser.recv("+OK")&& \
+                        _parser.send("AT+FEVENT=ON")&& \
+                        _parser.recv("+OK")&& \
+                        _parser.send("AT+FACTORY")&& \ 
+                        _parser.recv("+OK");
+                        wait(3);
+                        _parser.oob("+EVENT=SOCKET", this, &MXCHIP::_packet_handler);
+                        return success;
+                    } else {
+                        printf("test error!\r\n");
+                          return false;
+                    }
+                } else {
+                    printf("send a can't get +OK\r\n");
+                    return false;
+                }
+            }
+        }
+    }
 
     _parser.oob("+EVENT=SOCKET", this, &MXCHIP::_packet_handler);
 
     //Waiting for wifi module to restart
-	if(!_parser.recv("+EVENT=READY"))
-		return false;
+    if(!_parser.recv("+EVENT=READY"))
+        return false;
 
     return true;
 }
@@ -100,10 +98,7 @@ bool MXCHIP::dhcp(bool enabled)
 
 bool MXCHIP::connect(const char *ap, const char *passPhrase)
 {
-	char buffer[50];
-	bool success=false;
-    success= _parser.send("AT+WSTA=%s,%s", ap, passPhrase)
-			&& _parser.recv("+OK");
+    bool success = _parser.send("AT+WSTA=%s,%s", ap, passPhrase) && _parser.recv("+OK");
     if(!success)
     	return false;
     if(!_parser.send("AT+WLANF=STA,ON")&&_parser.recv("+OK")){
@@ -117,8 +112,7 @@ bool MXCHIP::connect(const char *ap, const char *passPhrase)
 
 bool MXCHIP::setChannel(uint8_t channel)
 {
-	return _parser.send("AT+WAPCH=%d",channel)
-		&& _parser.recv("+OK");
+    return _parser.send("AT+WAPCH=%d",channel) && _parser.recv("+OK");
 }
 
 bool MXCHIP::disconnect(void)
@@ -150,10 +144,9 @@ const char *MXCHIP::getMACAddress(void)
 //get current signal strength
 int8_t MXCHIP::getRSSI(){
     int8_t rssi = 0;
-    if (!(_parser.send("AT+WLINK")
-			&&_parser.recv("+OK=%*d,%d,%*d",&rssi)))
-	    return false;
-	return rssi;
+    if (!(_parser.send("AT+WLINK") && _parser.recv("+OK=%*d,%d,%*d",&rssi)))
+        return false;
+    return rssi;
 }
 
 
@@ -184,10 +177,10 @@ int MXCHIP::open(const char *type, int id, const char* addr, int port)
     bool connect = _parser.recv("+EVENT=%*[^,],CONNECT,%d",&socketId);
     _parser.setTimeout(8000);
 
-	if(connect)
-		return socketId;
-	else
-		return 0;
+    if(connect)
+        return socketId;
+    else
+        return 0;
 }
 
 bool MXCHIP::send(int id, const void *data, uint32_t amount)

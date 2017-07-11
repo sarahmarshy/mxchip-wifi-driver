@@ -33,7 +33,7 @@ public:
      * @param rx        RX pin
      * @param debug     Enable debugging
      */
-	MXCHIPInterface(PinName tx, PinName rx, bool debug = false);
+    MXCHIPInterface(PinName tx, PinName rx, bool debug = false);
 
     /** Start the interface
      *
@@ -68,13 +68,13 @@ public:
     virtual int set_credentials(const char *ssid, const char *pass,
     									nsapi_security_t security = NSAPI_SECURITY_NONE);
 
-	/** Set the WiFi network channel
-	 *
-	 * This function is not supported and will return NSAPI_ERROR_UNSUPPORTED
-	 *
-	 *	@param channel	 Channel on which the connection is to be made, or 0 for any (Default: 0)
-	 *	@return 		 true only if set channel succesfully.
-	 */
+    /** Set the WiFi network channel
+     *
+     * This function is not supported and will return NSAPI_ERROR_UNSUPPORTED
+     *
+     *	@param channel	 Channel on which the connection is to be made, or 0 for any (Default: 0)
+     *	@return 		 true only if set channel succesfully.
+     */
     virtual int set_channel(uint8_t channel);
 
     /** Stop the interface

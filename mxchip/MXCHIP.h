@@ -25,7 +25,7 @@
 class MXCHIP
 {
 public:
-	MXCHIP(PinName tx, PinName rx, bool debug=false);
+    MXCHIP(PinName tx, PinName rx, bool debug=false);
 
     /**
     * Startup the MXCHIP
