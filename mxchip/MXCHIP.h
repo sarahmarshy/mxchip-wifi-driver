@@ -17,7 +17,7 @@
 #ifndef MXCHIP_H
 #define MXCHIP_H
 
-#include "../../mxchip-wifi-driver/mxchip/ATParser/ATParser.h"
+#include "ATParser.h"
 
 /** MXCHIPInterface class.
     This is an interface to a MXCHIP radio.
@@ -25,7 +25,7 @@
 class MXCHIP
 {
 public:
-	MXCHIP(PinName tx, PinName rx, bool debug=false);
+    MXCHIP(PinName tx, PinName rx, bool debug=false);
 
     /**
     * Startup the MXCHIP
@@ -196,7 +196,6 @@ private:
 
     char _ip_buffer[16];
     char _mac_buffer[18];
-    char _rssi_buffer[16];
 };
 
 #endif

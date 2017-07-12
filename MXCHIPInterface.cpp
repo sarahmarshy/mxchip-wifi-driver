@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "../mxchip-wifi-driver/MXCHIPInterface.h"
+
+#include "MXCHIPInterface.h"
 
 // Various timeouts for different MXCHIP operations
 #define MXCHIP_CONNECT_TIMEOUT 15000
@@ -26,7 +26,7 @@
 MXCHIPInterface::MXCHIPInterface(PinName tx, PinName rx, bool debug)
     : _mxchip(tx, rx, debug)
 {
-	_channel=0;
+    _channel=0;
     memset(_ids, 0, sizeof(_ids));
     memset(_cbs, 0, sizeof(_cbs));
 
@@ -35,12 +35,12 @@ MXCHIPInterface::MXCHIPInterface(PinName tx, PinName rx, bool debug)
 
 int MXCHIPInterface::connect(const char *ssid, const char *pass, nsapi_security_t security,uint8_t channel)
 {
-	set_credentials(ssid, pass, security);
+    set_credentials(ssid, pass, security);
     return connect();
 }
 
 int MXCHIPInterface::connect(){
-	_mxchip.setTimeout(MXCHIP_CONNECT_TIMEOUT);
+    _mxchip.setTimeout(MXCHIP_CONNECT_TIMEOUT);
 
     if (!_mxchip.startup()) {
         return NSAPI_ERROR_DEVICE_ERROR;
@@ -52,7 +52,7 @@ int MXCHIPInterface::connect(){
         return NSAPI_ERROR_DHCP_FAILURE;
     }
 
-	  return NSAPI_ERROR_OK;
+    return NSAPI_ERROR_OK;
 }
 
 int MXCHIPInterface::set_credentials(const char *ssid, const char *pass, nsapi_security_t security)
@@ -70,12 +70,12 @@ int MXCHIPInterface::set_credentials(const char *ssid, const char *pass, nsapi_s
 
 int MXCHIPInterface::set_channel(uint8_t channel)
 {
-	return _mxchip.setChannel(channel);
+    return _mxchip.setChannel(channel);
 }
 
 int MXCHIPInterface::disconnect()
 {
-	_mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
+    _mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
 
     if (!_mxchip.disconnect()) {
         return NSAPI_ERROR_DEVICE_ERROR;
@@ -94,8 +94,19 @@ const char* MXCHIPInterface::get_mac_address()
     return _mxchip.getMACAddress();
 }
 
+const char* MXCHIPInterface::get_gateway()
+{
+    return NULL;
+}
+
+const char* MXCHIPInterface::get_netmask()
+{
+    return NULL;
+}
+
+
 int8_t MXCHIPInterface::get_rssi(){
-	return _mxchip.getRSSI();
+    return _mxchip.getRSSI();
 }
 
 
@@ -116,7 +127,7 @@ int MXCHIPInterface::socket_open(void **handle, nsapi_protocol_t proto)
 {
     // Look for an unused socket
     int id = -1;
- 
+
     for (int i = 1; i < MXCHIP_SOCKET_COUNT; i++) {
         if (!_ids[i]) {
             id = i;
@@ -124,16 +135,16 @@ int MXCHIPInterface::socket_open(void **handle, nsapi_protocol_t proto)
             break;
         }
     }
- 
+
     if (id == -1) {
         return NSAPI_ERROR_NO_SOCKET;
     }
-    
+
     struct MXCHIP_socket *socket = new struct MXCHIP_socket;
     if (!socket) {
         return NSAPI_ERROR_NO_SOCKET;
     }
-    
+
     socket->id = id;
     socket->socketId = 0;
     socket->proto = proto;
@@ -147,7 +158,7 @@ int MXCHIPInterface::socket_close(void *handle)
     struct MXCHIP_socket *socket = (struct MXCHIP_socket *)handle;
     int err = 0;
     _mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
- 
+
     if (!_mxchip.close(socket->socketId)) {
         err = NSAPI_ERROR_DEVICE_ERROR;
     }
@@ -180,7 +191,7 @@ int MXCHIPInterface::socket_connect(void *handle, const SocketAddress &addr)
 
     return 0;
 }
-    
+
 int MXCHIPInterface::socket_accept(void *server, void **handle, SocketAddress *addr )
 {
     return NSAPI_ERROR_UNSUPPORTED;
@@ -190,11 +201,11 @@ int MXCHIPInterface::socket_send(void *handle, const void *data, unsigned size)
 {
     struct MXCHIP_socket *socket = (struct MXCHIP_socket *)handle;
     _mxchip.setTimeout(MXCHIP_SEND_TIMEOUT);
- 
+
     if (!_mxchip.send(socket->socketId, data, size)) {
         return NSAPI_ERROR_DEVICE_ERROR;
     }
- 
+
     return size;
 }
 
@@ -202,12 +213,12 @@ int MXCHIPInterface::socket_recv(void *handle, void *data, unsigned size)
 {
     struct MXCHIP_socket *socket = (struct MXCHIP_socket *)handle;
     _mxchip.setTimeout(MXCHIP_RECV_TIMEOUT);
- 
+
     int32_t recv = _mxchip.recv(socket->socketId, data, size);
     if (recv < 0) {
         return NSAPI_ERROR_WOULD_BLOCK;
     }
- 
+
     return recv;
 }
 
@@ -220,7 +231,7 @@ int MXCHIPInterface::socket_sendto(void *handle, const SocketAddress &addr, cons
             return err;
         }
     }
-    
+
     return socket_send(socket, data, size);
 }
 
