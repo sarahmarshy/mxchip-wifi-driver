@@ -159,10 +159,11 @@ int MXCHIPInterface::socket_close(void *handle)
     int err = 0;
     _mxchip.setTimeout(MXCHIP_MISC_TIMEOUT);
 
-    if (!_mxchip.close(socket->socketId)) {
+    if (socket->connected && !_mxchip.close(socket->socketId)) {
         err = NSAPI_ERROR_DEVICE_ERROR;
     }
 
+    socket->connected = false;
     _ids[socket->id] = false;
     delete socket;
     return err;
