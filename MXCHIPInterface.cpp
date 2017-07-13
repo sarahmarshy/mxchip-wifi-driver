@@ -121,6 +121,7 @@ struct MXCHIP_socket {
     int socketId;
     nsapi_protocol_t proto;
     bool connected;
+    SocketAddress addr;
 };
 
 int MXCHIPInterface::socket_open(void **handle, nsapi_protocol_t proto)
@@ -226,11 +227,19 @@ int MXCHIPInterface::socket_recv(void *handle, void *data, unsigned size)
 int MXCHIPInterface::socket_sendto(void *handle, const SocketAddress &addr, const void *data, unsigned size)
 {
     struct MXCHIP_socket *socket = (struct MXCHIP_socket *)handle;
+    if (socket->connected && socket->addr != addr) {
+        if (!_mxchip.close(socket->socketId)) {
+            return NSAPI_ERROR_DEVICE_ERROR;
+        }
+        socket->connected = false;
+    }
+
     if (!socket->connected) {
         int err = socket_connect(socket, addr);
         if (err < 0) {
             return err;
         }
+        socket->addr = addr;
     }
 
     return socket_send(socket, data, size);
@@ -239,7 +248,11 @@ int MXCHIPInterface::socket_sendto(void *handle, const SocketAddress &addr, cons
 int MXCHIPInterface::socket_recvfrom(void *handle, SocketAddress *addr, void *data, unsigned size)
 {
     struct MXCHIP_socket *socket = (struct MXCHIP_socket *)handle;
-    return socket_recv(socket, data, size);
+    int ret = socket_recv(socket, data, size);
+    if (ret >= 0 && addr) {
+       *addr = socket->addr;
+    }
+    return ret;
 }
 
 void MXCHIPInterface::socket_attach(void *handle, void (*callback)(void *), void *data)
